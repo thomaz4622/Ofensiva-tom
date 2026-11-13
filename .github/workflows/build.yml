@@ -15,7 +15,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.9
-      - run: gradle assembleDebug --no-daemon
+      - name: Compilar
+        run: gradle assembleDebug --no-daemon --console=plain > log.txt 2>&1
+      - name: Mostrar erro
+        if: failure()
+        run: grep -E -A12 "^e: |What went wrong" log.txt | head -60
       - uses: actions/upload-artifact@v4
         with:
           name: ofensiva-apk
